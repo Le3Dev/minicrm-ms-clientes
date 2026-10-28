@@ -1,5 +1,7 @@
 # MS Clientes — Mini CRM
 
+> Parte do sistema **Mini CRM (PJBL)**. Arquitetura (C4, Canvas, ARC42), frontends, infra e links de todos os repositórios: [Le3Dev/minicrm-arquitetura](https://github.com/Le3Dev/minicrm-arquitetura).
+
 Microsserviço do domínio **Clientes** do Mini CRM: carteira de clientes e histórico de interações, gravados no **MongoDB Atlas**. CRUD completo documentado com **Swagger**. O status do cliente passa de Prospect para Ativo quando a **Azure Function** consome o evento `OportunidadeGanha` (regra RF30 do Mini CRM).
 
 | | URL |
@@ -7,7 +9,7 @@ Microsserviço do domínio **Clientes** do Mini CRM: carteira de clientes e hist
 | API na nuvem | `https://<ms-clientes>.azurecontainerapps.io` |
 | Swagger | `https://<ms-clientes>.azurecontainerapps.io/docs` |
 | OpenAPI (JSON) | `https://<ms-clientes>.azurecontainerapps.io/v3/api-docs` |
-| Imagem Docker | `docker.io/<usuario-dockerhub>/minicrm-ms-clientes:v1` |
+| Imagem Docker | `docker.io/leandrocanha/minicrm-ms-clientes:latest` |
 
 ## Onde ele fica na solução
 
@@ -113,14 +115,14 @@ mvn test -Dtest=ArquiteturaTest             # só arquitetura
 ## Docker Hub e deploy
 
 ```bash
-docker build -t <usuario-dockerhub>/minicrm-ms-clientes:v1 .
+docker build -t leandrocanha/minicrm-ms-clientes:v1.0.0 .
 docker login
-docker push <usuario-dockerhub>/minicrm-ms-clientes:v1
+docker push leandrocanha/minicrm-ms-clientes:v1.0.0
 ```
 
-O Docker Hub aceita só `usuario/repositorio`, por isso o nome usa hífen em vez de `usuario/minicrm/ms-clientes`. O workflow `.github/workflows/ms-clientes.yml` roda `mvn verify` a cada push e, numa tag `ms-clientes-v*`, publica a imagem (secrets `DOCKERHUB_USERNAME` e `DOCKERHUB_TOKEN`).
+O Docker Hub aceita só `usuario/repositorio`, por isso o nome usa hífen em vez de `usuario/minicrm/ms-clientes`. O workflow `.github/workflows/ci.yml` roda `mvn verify` a cada push e, numa tag `v*` (ex.: `v1.0.0`), publica a imagem (secrets `DOCKERHUB_USERNAME` e `DOCKERHUB_TOKEN`).
 
-Deploy no Azure Container Apps: `infra/azure/deploy-pessoa-a.sh` na raiz do repositório. Variáveis do container: `MONGODB_URI` (secret), `URL_PUBLICA`. No Atlas, libere o acesso de rede `0.0.0.0/0`, porque o IP de saída do Container Apps não é fixo.
+Deploy no Azure Container Apps: script `infra/azure/deploy-pessoa-a.sh` do [repositório central](https://github.com/Le3Dev/minicrm-arquitetura). Variáveis do container: `MONGODB_URI` (secret), `URL_PUBLICA`. No Atlas, libere o acesso de rede `0.0.0.0/0`, porque o IP de saída do Container Apps não é fixo.
 
 ## Alunos
 
