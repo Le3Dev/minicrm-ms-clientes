@@ -4,8 +4,17 @@
 set -euo pipefail
 BASE_URL="${BASE_URL:-http://localhost:8080}"
 cadastrar() {
-  curl -fsS -X POST "$BASE_URL/clientes" -H 'content-type: application/json' \
-    -d "{\"nome\":\"$1\",\"empresa\":\"$2\",\"email\":\"$3\",\"telefone\":\"$4\",\"responsavelId\":\"$5\"}" >/dev/null
+  # O corpo vai pela entrada padrão, em UTF-8 puro: no Git Bash do Windows, passar acentos
+  # direto em -d faz o curl enviar outra codificação e o servidor responde 400.
+  local corpo resposta
+  corpo=$(printf '{"nome":"%s","empresa":"%s","email":"%s","telefone":"%s","responsavelId":"%s"}' "$1" "$2" "$3" "$4" "$5")
+  resposta=$(printf '%s' "$corpo" | curl -sS -w '\n%{http_code}' -X POST "$BASE_URL/clientes" \
+    -H 'content-type: application/json; charset=utf-8' --data-binary @-)
+  local codigo="${resposta##*$'\n'}"
+  if [ "$codigo" != "201" ] && [ "$codigo" != "200" ]; then
+    echo "✘ $1: HTTP $codigo — ${resposta%$'\n'*}" >&2
+    return 1
+  fi
   echo "✔ $1 ($2)"
 }
 cadastrar "Mariana Souza"   "Acme Ltda"          "mariana@acme.com.br"     "(41) 99811-2030" "u2"
