@@ -6,9 +6,9 @@ Microsserviço do domínio **Clientes** do Mini CRM: carteira de clientes e hist
 
 | | URL |
 | --- | --- |
-| API na nuvem | `https://<ms-clientes>.azurecontainerapps.io` |
-| Swagger | `https://<ms-clientes>.azurecontainerapps.io/docs` |
-| OpenAPI (JSON) | `https://<ms-clientes>.azurecontainerapps.io/v3/api-docs` |
+| API na nuvem | `https://ms-clientes.kindbay-40f0b2c9.centralus.azurecontainerapps.io` |
+| Swagger | `https://ms-clientes.kindbay-40f0b2c9.centralus.azurecontainerapps.io/docs` |
+| OpenAPI (JSON) | `https://ms-clientes.kindbay-40f0b2c9.centralus.azurecontainerapps.io/v3/api-docs` |
 | Imagem Docker | `docker.io/leandrocanha/minicrm-ms-clientes:latest` |
 
 ## Onde ele fica na solução
